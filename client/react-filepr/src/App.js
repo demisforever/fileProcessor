@@ -1,19 +1,12 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import UploadFiles from "./components/fileUploadC";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-
-        <p>Hola mundo cruel</p>
-
-        <div class="mb-3">
-          <input class="form-control form-control-sm" id="formFileSm" type="file" />
-          <button type="button" class="btn btn-success">Go!</button>
-        </div>
-
-      </header>
+    <div className="container" style={{ width: "600px" }}>
+      <UploadFiles />
     </div>
   );
 }

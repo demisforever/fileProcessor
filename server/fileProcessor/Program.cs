@@ -21,6 +21,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
+                          // allow any Headers and methods from http://localhost:3000
                           policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyMethod();
                       });
 });
@@ -33,6 +34,7 @@ app.UseCors(MyAllowSpecificOrigins);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage(); // to use my client page
     app.UseSwagger();
     app.UseSwaggerUI();
 }

@@ -1,10 +1,11 @@
-﻿using fileProcessor.models;
-using fileProcessor.Models;
+﻿using fileProcessor.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Text;
+using System.IO;
 
 namespace fileProcessor.Controllers
 {
@@ -12,31 +13,23 @@ namespace fileProcessor.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
-        //private IFileRepository _countryRepository;         
-        //private static IWebHostEnvironment _webHostEnvironment;
-
-        //public void CountryController(IFileRepository countryRepository)
-        //{
-            //this._countryRepository = countryRepository;
-            //_webHostEnvironment = webHostEnvironment;
-        //}
-
-        // https://localhost:7041/api/file
+        // url to request https://localhost:7041/api/file
         [HttpGet]
         public string Aaaa()
         {
-            return "hola";
+            return "hola, soy la API de file";
         }
 
-        // https://localhost:7041/api/file/uploading
+        // url to request https://localhost:7041/api/file/uploading
         [HttpPost]
         [Route("uploading")]
         public async Task<string> Uploadf([FromForm] UdFile obj)
         {
-            if (obj.ffile.Length > 0)
+            // read line to line the file content
+            if (obj.Ffile != null)
             {
                 var result = new StringBuilder();
-                using (var reader = new StreamReader(obj.ffile.OpenReadStream()))
+                using (var reader = new StreamReader(obj.Ffile.OpenReadStream()))
                 {
                     while (reader.Peek() >= 0)
                         result.AppendLine(await reader.ReadLineAsync());

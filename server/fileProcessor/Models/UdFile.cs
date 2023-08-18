@@ -2,8 +2,8 @@
 {
     public class UdFile
     {
-        public int idfile { get; set; }
-        public DateTime timestamp { get; set; }
-        public IFormFile ffile { get; set; }
+        //public int idfile { get; set; }
+        //public DateTime timestamp { get; set; }
+        public IFormFile? Ffile { get; set; }
     }
 }

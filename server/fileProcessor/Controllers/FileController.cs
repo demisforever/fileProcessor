@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Text;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace fileProcessor.Controllers
 {
@@ -25,20 +26,31 @@ namespace fileProcessor.Controllers
         [Route("uploading")]
         public async Task<string> Uploadf([FromForm] UdFile obj)
         {
-            // read line to line the file content
             if (obj.Ffile != null)
             {
                 var result = new StringBuilder();
                 using (var reader = new StreamReader(obj.Ffile.OpenReadStream()))
                 {
+                    // read line to line the file content
                     while (reader.Peek() >= 0)
                         result.AppendLine(await reader.ReadLineAsync());
                 }
-                //convert string to Json
-                JObject json = JObject.Parse(result.ToString());
-                return result.ToString();
+                
+                try
+                {
+                    // convert string to Json
+                    JObject json = JObject.Parse(result.ToString());
+                } catch (JsonReaderException jex)
+                {
+                    return "Incorrect JSON format: " + jex.Message;
+                } catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+
+                return "File in JSON format successfully processed.";
             }
-            return "File noooo estaa!";
+            return "File is null";
         }
 
         //[HttpPost]

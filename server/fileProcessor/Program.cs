@@ -1,4 +1,5 @@
 using fileProcessor;
+using MySql.Data.MySqlClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// add SQLConfiguration to builder 
+// add SQLConfiguration to builder (that remplase Startup.cs)
 var mySQLConfiguration = new MySQLConfiguration(builder.Configuration.GetConnectionString("MySqlConnection"));
 builder.Services.AddSingleton(mySQLConfiguration);
-//builder.Services.AddScoped<>
+//builder.Services.AddSingleton(new MySqlConnection(builder.Configuration.GetConnectionString("MySqlConnection")));
+builder.Services.AddScoped<IFileRepository, FileRepository>(); //instancia al repositorio
 
 // Add cors to give permissions to 'http://localhost:3000' requests.
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

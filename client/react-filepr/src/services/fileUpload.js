@@ -1,12 +1,13 @@
 import http from "../http-common";
+import UploadService from "../services/fileUpload";
 
 class fileUploadDataService {
     getFiles() {
         return http.get("/file");
     }
 
-    getAll() {
-        return http.get("/file/all");
+    getFileById(id) {
+        return http.get(`/file/${id}`);
     }
     
     upload(file, onUploadProgress) {

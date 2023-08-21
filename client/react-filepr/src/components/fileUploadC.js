@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import UploadService from "../services/fileUpload";
+import FileDetails from "./fileDetails";
+import { Link, BrowserRouter, Route, Routes, Router } from "react-router-dom";
 
 export default class UploadFiles extends Component {
     constructor(props) {
@@ -40,7 +42,7 @@ export default class UploadFiles extends Component {
                 this.setState({
                     message: response.data,
                 });
-                return UploadService.getFiles(); // get the files information and assign the result to fileInfos state
+                return UploadService.getFiles(); // update fileInfos state
             })
             .then((files) => {
                 this.setState({
@@ -61,7 +63,7 @@ export default class UploadFiles extends Component {
     }
 
     componentDidMount() {
-        UploadService.getFiles().then((response) => {
+        UploadService.getFiles().then((response) => { // get the files information and assign the result to fileInfos state
             this.setState({
                 fileInfos: response.data,
             });
@@ -116,10 +118,12 @@ export default class UploadFiles extends Component {
                         {Array.isArray(fileInfos) && fileInfos &&
                             fileInfos.map((file, index) => (
                                 <li className="list-group-item" key={index}>
-                                    <a href={file.url}>{file.name}</a>
+                                    <a href="/fileDetails">{file.idfile} {file.name} {file.timestamp}</a>
                                 </li>
                             ))}
                     </ul>
+                </div>
+                <div>
                 </div>
             </div>
         );

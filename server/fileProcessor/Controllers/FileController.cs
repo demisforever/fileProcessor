@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace fileProcessor.Controllers
 {
@@ -14,11 +15,18 @@ namespace fileProcessor.Controllers
     [ApiController]
     public class FileController : ControllerBase
     {
+        private readonly IFileRepository _fileRepository;
+
+        public FileController(IFileRepository fileRepository)
+        {
+            _fileRepository = fileRepository;
+        }
+
         // url to request https://localhost:7041/api/file
         [HttpGet]
-        public string Aaaa()
+        public async Task<IActionResult> GetAllFiles()
         {
-            return "hola, soy la API de file";
+            return Ok(await _fileRepository.GetAllFiles());
         }
 
         // url to request https://localhost:7041/api/file/uploading
@@ -35,7 +43,7 @@ namespace fileProcessor.Controllers
                     while (reader.Peek() >= 0)
                         result.AppendLine(await reader.ReadLineAsync());
                 }
-                
+
                 try
                 {
                     // convert string to Json
@@ -52,7 +60,14 @@ namespace fileProcessor.Controllers
             }
             return "File is null";
         }
-
+        
+        
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetFile(int id)
+        {
+            return Ok(await _fileRepository.GetFile(id));
+        }
+        
         //[HttpPost]
         //public void SaveNewValue([FromBody] string value)
         //{

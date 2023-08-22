@@ -11,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route exact path="/" element={<UploadFiles />}> </Route>
-          <Route exact path="/fileDetails" element={<FileDetails />}> </Route>
+          <Route exact path="/fileDetails/:idfile" element={<FileDetails />}> </Route>
         </Routes>
       </BrowserRouter>
     </div>

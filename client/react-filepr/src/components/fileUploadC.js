@@ -118,7 +118,7 @@ export default class UploadFiles extends Component {
                         {Array.isArray(fileInfos) && fileInfos &&
                             fileInfos.map((file, index) => (
                                 <li className="list-group-item" key={index}>
-                                    <a href="/fileDetails">{file.idfile} {file.name} {file.timestamp}</a>
+                                    <Link to={"/fileDetails/" + file.idfile} idFile={file.idfile} >{file.idfile} {file.name} {file.timestamp}</Link>
                                 </li>
                             ))}
                     </ul>

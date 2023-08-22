@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import UploadService from "../services/fileUpload";
 
-export default class UploadFiles extends Component {
+export default class UploadFiles extends Component {    
     constructor(props) {
         super(props);
 
+        const fileId = window.location.pathname.split('/')[2]
         this.state = {
             dataFileInfo: [],
             dataCountriesInfo: [],
             message: "",
-            selectedFileId: 1,
+            selectedFileId: fileId,
         };
     }
 
@@ -23,7 +24,7 @@ export default class UploadFiles extends Component {
     }
 
 
-    render() {
+    render() {        
         const {
             selectedFileId,
             message,

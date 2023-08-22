@@ -59,26 +59,31 @@ namespace fileProcessor
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Country>> GetAllCountries()
+        public async Task<bool> InsertFile(File file)
+        {
+            var db = dbConnection();
+            var sql = @"INSERT INTO fileprocessordb.file (name, timestamp) VALUES(@Name, @Timestamp);";
+            var result = await db.ExecuteAsync(sql, new { file.Name, file.Timestamp });
+            return result > 0; //is > 0 if it executes successfully
+        }
+
+        public async Task<bool> InsertCountry(Country country)
+        {
+            var db = dbConnection();
+            var sql = @"INSERT INTO fileprocessordb.country (name, value, color, idfile) 
+                        VALUES(
+                            @Name,
+                            @Value,
+                            @Color,
+                            (SELECT idFile From fileprocessordb.file ORDER BY idFile DESC LIMIT 1)
+                        );"; // idFile belongs to the last record of File
+            var result = await db.ExecuteAsync(sql, new { country.Name, country.Value, country.Color });
+            return result > 0; //is > 0 if it executes successfully
+        }
+
+        public Task<bool> DeleteFile(int id)
         {
             throw new NotImplementedException();
         }
-
-        public Task<Country> GetCountry(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> InsertCountry(Country country)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> UpdateCountry(Country country)
-        {
-            throw new NotImplementedException();
-        }
-
-
     }
 }

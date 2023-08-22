@@ -8,6 +8,7 @@ using System.Text;
 using System.IO;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
+using fileProcessor.models;
 
 namespace fileProcessor.Controllers
 {
@@ -34,6 +35,7 @@ namespace fileProcessor.Controllers
         [Route("uploading")]
         public async Task<string> Uploadf([FromForm] UdFile obj)
         {
+            JObject json;
             if (obj.Ffile != null)
             {
                 var result = new StringBuilder();
@@ -47,7 +49,7 @@ namespace fileProcessor.Controllers
                 try
                 {
                     // convert string to Json
-                    JObject json = JObject.Parse(result.ToString());
+                    json = JObject.Parse(result.ToString());
                 } catch (JsonReaderException jex)
                 {
                     return "Incorrect JSON format: " + jex.Message;
@@ -56,7 +58,28 @@ namespace fileProcessor.Controllers
                     return ex.Message;
                 }
 
-                return "File in JSON format successfully processed.";
+                // complete File object
+                Models.File f = new Models.File();
+                f.Timestamp = (System.DateTime)json["Timestamp"];
+                f.Name = obj.Ffile.FileName;
+                OkObjectResult fileInsertedOk = Ok(await _fileRepository.InsertFile(f));
+
+                if (fileInsertedOk.Equals(false)) {
+                    return "Problems at insert File ";
+                }
+
+                // complete Countrie object
+                JToken countriesRows = json["Rows"];
+                Country c = new Country();
+                for (int i = 0; i < countriesRows.Count(); i++)
+                {
+                    c.Name = (string)countriesRows[i]["Name"];
+                    c.Value = (int)countriesRows[i]["Value"];
+                    c.Color = (string)countriesRows[i]["Color"];
+                    Ok(await _fileRepository.InsertCountry(c));
+                }
+
+                return "File in JSON format successfully processed";
             }
             return "File is null";
         }
@@ -78,10 +101,11 @@ namespace fileProcessor.Controllers
         //{
         //}
 
-        //[HttpDelete]
-        //public void RemoveValue(int id)
-        //{
-        //}
+        [HttpDelete]
+        public async Task<IActionResult> DeleteFile(int id)
+        {
+            return Ok(await _fileRepository.DeleteFile(id));
+        }
 
     }
 }

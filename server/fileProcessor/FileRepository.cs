@@ -5,6 +5,7 @@ using Dapper;
 using System.IO;
 using File = fileProcessor.Models.File;
 using System.Collections.Generic;
+using MySqlX.XDevAPI.Common;
 
 namespace fileProcessor
 {
@@ -54,11 +55,6 @@ namespace fileProcessor
             return fileList;
         }
 
-        public Task<bool> DeleteCountry(Country country)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> InsertFile(File file)
         {
             var db = dbConnection();
@@ -81,9 +77,20 @@ namespace fileProcessor
             return result > 0; //is > 0 if it executes successfully
         }
 
-        public Task<bool> DeleteFile(int id)
+        public async Task<bool> DeleteFile(int id)
         {
-            throw new NotImplementedException();
+            var db = dbConnection();
+            var sql = @"DELETE FROM fileprocessordb.file WHERE (idfile = @Id);";
+            var result = await db.ExecuteAsync(sql, new { Id = id });
+            return result > 0; //is > 0 if it executes successfully
         }
+        public async Task<bool> DeleteCountry(int id)
+        {
+            var db = dbConnection();
+            var sql = @"DELETE FROM fileprocessordb.country WHERE (idfile = @Id);";
+            var result = await db.ExecuteAsync(sql, new { Id = id });
+            return result > 0; //is > 0 if it executes successfully
+        }
+
     }
 }

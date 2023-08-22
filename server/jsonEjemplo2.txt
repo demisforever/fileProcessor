@@ -1,0 +1,21 @@
+{
+	"ID": 123,
+	"Count": 3,
+	"Timestamp": "2023-08-14 00:52:34",
+	"Rows":[
+		{
+			"Name": "United States",
+			"Value": 3500,
+			"Color": "FF0000"
+		},
+		{
+			"Name": "Paraguay",
+			"Value": 175,
+			"Color": "00FF00"
+		},{
+			"Name": "Mexico",
+			"Value": 2500,
+			"Color": "0000FF"
+		}
+	]
+}

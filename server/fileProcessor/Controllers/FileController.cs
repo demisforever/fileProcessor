@@ -101,9 +101,10 @@ namespace fileProcessor.Controllers
         //{
         //}
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(int id)
         {
+            Ok(await _fileRepository.DeleteCountry(id));
             return Ok(await _fileRepository.DeleteFile(id));
         }
 

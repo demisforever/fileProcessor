@@ -12,7 +12,7 @@ namespace fileProcessor
         Task<bool> InsertFile(File file);
         Task<bool> InsertCountry(Country country);
         Task<bool> DeleteFile(int id);
-        Task<bool> DeleteCountry(Country country);
+        Task<bool> DeleteCountry(int id);
         
     }
 }

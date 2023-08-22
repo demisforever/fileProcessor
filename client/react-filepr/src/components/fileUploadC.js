@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import UploadService from "../services/fileUpload";
-import FileDetails from "./fileDetails";
 import { Link, BrowserRouter, Route, Routes, Router } from "react-router-dom";
 
 export default class UploadFiles extends Component {

@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 import UploadService from "../services/fileUpload";
+import UploadFiles from "./fileUploadC"
+import { useHistory , useNavigate, Link, BrowserRouter, Route, Routes, Router } from "react-router-dom";
 
-export default class UploadFiles extends Component {    
+
+export default class FileDetails extends Component {
+    
     constructor(props) {
         super(props);
 
-        const fileId = window.location.pathname.split('/')[2]
+        const fileId = window.location.pathname.split('/')[2];
+        
         this.state = {
             dataFileInfo: [],
             dataCountriesInfo: [],
@@ -13,6 +18,20 @@ export default class UploadFiles extends Component {
             selectedFileId: fileId,
         };
     }
+
+    
+    deleteFile = (e) => {
+
+        UploadService.delete(this.state.selectedFileId).then((response) => {
+            this.setState({
+                message: response.data,
+            });
+            
+        });
+
+
+    }
+
 
     componentDidMount() {
         UploadService.getFileById(this.state.selectedFileId).then((response) => { // get the files with countries
@@ -24,7 +43,7 @@ export default class UploadFiles extends Component {
     }
 
 
-    render() {        
+    render() {
         const {
             selectedFileId,
             message,
@@ -35,12 +54,18 @@ export default class UploadFiles extends Component {
         return (
             <div>
                 <a href="/">Home</a>
+
+                <div className="alert alert-light" role="alert">
+                    {message}
+                </div>
+
                 <div>
                     aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     {Array.isArray(dataFileInfo) && dataFileInfo &&
                         dataFileInfo.map((file, index) => (
                             <li className="list-group-item" key={index}>
-                                <div>{file.idfile} {file.name} {file.timestamp}</div>
+                                <div><h3>{file.idfile} {file.name} </h3></div>
+                                <div><h5> {file.timestamp}</h5></div>
                             </li>
                         ))}
                 </div>
@@ -53,6 +78,8 @@ export default class UploadFiles extends Component {
                             </li>
                         ))}
                 </div>
+                <button type="button" class="btn btn-primary btn-sm">Download txt</button>
+                <button type="button" href="/" onClick={this.deleteFile} class="btn btn-secondary btn-sm">Delete</button>
             </div>
         );
     }

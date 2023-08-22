@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import UploadService from "../services/fileUpload";
 import UploadFiles from "./fileUploadC"
-import { useHistory , useNavigate, Link, BrowserRouter, Route, Routes, Router } from "react-router-dom";
+import Chart from "./chart"
+
 
 
 export default class FileDetails extends Component {
-    
+
     constructor(props) {
         super(props);
 
         const fileId = window.location.pathname.split('/')[2];
-        
+
         this.state = {
             dataFileInfo: [],
             dataCountriesInfo: [],
@@ -19,14 +20,12 @@ export default class FileDetails extends Component {
         };
     }
 
-    
-    deleteFile = (e) => {
 
+    deleteFile = (e) => {
         UploadService.delete(this.state.selectedFileId).then((response) => {
             this.setState({
                 message: response.data,
             });
-            
         });
 
 
@@ -60,7 +59,6 @@ export default class FileDetails extends Component {
                 </div>
 
                 <div>
-                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
                     {Array.isArray(dataFileInfo) && dataFileInfo &&
                         dataFileInfo.map((file, index) => (
                             <li className="list-group-item" key={index}>
@@ -69,15 +67,15 @@ export default class FileDetails extends Component {
                             </li>
                         ))}
                 </div>
-                <div>
-                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+                <div class="container">
                     {Array.isArray(dataCountriesInfo) && dataCountriesInfo &&
                         dataCountriesInfo.map((file, index) => (
-                            <li className="list-group-item" key={index}>
-                                <div>{file.name} {file.value} {file.color}</div>
-                            </li>
+                            <div class="row" key={index}>
+                                <div class="col">{file.name}</div> <div class="col">{file.value} </div><div class="col">{file.color}</div>
+                            </div>
                         ))}
                 </div>
+                <Chart data = {dataFileInfo} />
                 <button type="button" class="btn btn-primary btn-sm">Download txt</button>
                 <button type="button" href="/" onClick={this.deleteFile} class="btn btn-secondary btn-sm">Delete</button>
             </div>

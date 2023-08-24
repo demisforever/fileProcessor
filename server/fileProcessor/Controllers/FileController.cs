@@ -62,11 +62,7 @@ namespace fileProcessor.Controllers
                 Models.File f = new Models.File();
                 f.Timestamp = (System.DateTime)json["Timestamp"];
                 f.Name = obj.Ffile.FileName;
-                OkObjectResult fileInsertedOk = Ok(await _fileRepository.InsertFile(f));
-
-                if (fileInsertedOk.Equals(false)) {
-                    return "Problems at insert File ";
-                }
+                int idFileInserted = (_fileRepository.InsertFile(f));
 
                 // complete Countrie object
                 JToken countriesRows = json["Rows"];
@@ -76,6 +72,7 @@ namespace fileProcessor.Controllers
                     c.Name = (string)countriesRows[i]["Name"];
                     c.Value = (int)countriesRows[i]["Value"];
                     c.Color = (string)countriesRows[i]["Color"];
+                    c.Idfile = idFileInserted;
                     Ok(await _fileRepository.InsertCountry(c));
                 }
 
@@ -90,16 +87,6 @@ namespace fileProcessor.Controllers
         {
             return Ok(await _fileRepository.GetFile(id));
         }
-        
-        //[HttpPost]
-        //public void SaveNewValue([FromBody] string value)
-        //{
-        //}
-
-        //[HttpPut]
-        //public void UpdateValue(int id, [FromBody] string value)
-        //{
-        //}
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFile(int id)

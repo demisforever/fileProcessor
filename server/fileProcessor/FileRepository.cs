@@ -38,14 +38,12 @@ namespace fileProcessor
             return await db.QueryAsync<Country>(sql, new { Id = id });
         }
 
-        // https://stackoverflow.com/questions/70385244/how-to-add-create-multiple-one-to-many-relationships-in-same-view-in-asp-net-cor
         public async Task<IEnumerable<File>> GetFile(int id)
         {
             var db = dbConnection();
             // query: ger a File with idfile
             var sql = @"SELECT * FROM fileprocessordb.file AS f WHERE f.idfile = @id;";
             IEnumerable<File> fileList = await db.QueryAsync<File>(sql, new { Id = id });
-            fileList.First().Countries = new List<Country>();
 
             // query all countries with an specific idfile
             sql = @"SELECT idcountry, name, value, color, idfile FROM fileprocessordb.country WHERE idfile = @id;";
@@ -55,12 +53,14 @@ namespace fileProcessor
             return fileList;
         }
 
-        public async Task<bool> InsertFile(File file)
+        // return int idFile value from inserted file 
+        public int InsertFile(File file)
         {
             var db = dbConnection();
-            var sql = @"INSERT INTO fileprocessordb.file (name, timestamp) VALUES(@Name, @Timestamp);";
-            var result = await db.ExecuteAsync(sql, new { file.Name, file.Timestamp });
-            return result > 0; //is > 0 if it executes successfully
+            var sql = @"INSERT INTO fileprocessordb.file (name, timestamp) VALUES(@Name, @Timestamp); SELECT LAST_INSERT_ID();";
+            var result = db.QuerySingle<int>(sql, new { file.Name, file.Timestamp });
+
+            return result; //is > 0 if it executes successfully
         }
 
         public async Task<bool> InsertCountry(Country country)
@@ -71,9 +71,9 @@ namespace fileProcessor
                             @Name,
                             @Value,
                             @Color,
-                            (SELECT idFile From fileprocessordb.file ORDER BY idFile DESC LIMIT 1)
-                        );"; // idFile belongs to the last record of File
-            var result = await db.ExecuteAsync(sql, new { country.Name, country.Value, country.Color });
+                            @IdFile
+                        );";
+            var result = await db.ExecuteAsync(sql, new { country.Name, country.Value, country.Color, country.Idfile });
             return result > 0; //is > 0 if it executes successfully
         }
 

@@ -4,12 +4,13 @@ import { Chart as ChartJS } from 'chart.js/auto'
 function App(props) {    
     const mylabels =[];
     const myDataValue = [];
+    const myDataColors = [];
     if (props.data.length > 0) {
         const data = props.data[0];
         for (let i = 0; i < data.countries.length; i++) {
             mylabels.push(data.countries[i].name);
             myDataValue.push(data.countries[i].value);
-
+            myDataColors.push("#" + data.countries[i].color)
         };
     }
     return (
@@ -28,9 +29,9 @@ function App(props) {
                                 // Data or value of your each variable
                                 data: myDataValue, // [1552, 1319, 613, 1400],
                                 // Color of each bar
-                                backgroundColor: ["aqua", "green", "red", "yellow"],
+                                backgroundColor: myDataColors,
                                 // Border color of each bar
-                                borderColor: ["aqua", "green", "red", "yellow"],
+                                borderColor: myDataColors,
                                 borderWidth: 0.5,
                             },
                         ],

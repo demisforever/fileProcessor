@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import UploadService from "../services/fileUpload";
-import UploadFiles from "./fileUploadC"
 import Chart from "./chart"
 
 
@@ -27,8 +26,6 @@ export default class FileDetails extends Component {
                 message: response.data,
             });
         });
-
-
     }
 
 
@@ -41,6 +38,15 @@ export default class FileDetails extends Component {
         });
     }
 
+    downloadFile = () => {
+        const element = document.createElement("a");
+        const jsonString = JSON.stringify(this.state.dataFileInfo, null, "\t");
+        const file = new Blob([jsonString], { type: 'text/plain' });
+        element.href = URL.createObjectURL(file);
+        element.download = "myFile.txt";
+        document.body.appendChild(element); // Required for this to work in FireFox
+        element.click();
+    }
 
     render() {
         const {
@@ -67,7 +73,7 @@ export default class FileDetails extends Component {
                             </li>
                         ))}
                 </div>
-                <div class="container">
+                <div class="container" id="myData">
                     {Array.isArray(dataCountriesInfo) && dataCountriesInfo &&
                         dataCountriesInfo.map((file, index) => (
                             <div class="row" key={index}>
@@ -75,8 +81,8 @@ export default class FileDetails extends Component {
                             </div>
                         ))}
                 </div>
-                <Chart data = {dataFileInfo} />
-                <button type="button" class="btn btn-primary btn-sm">Download txt</button>
+                <Chart data={dataFileInfo} />
+                <button type="button" onClick={this.downloadFile} class="btn btn-primary btn-sm">Download txt</button>
                 <button type="button" href="/" onClick={this.deleteFile} class="btn btn-secondary btn-sm">Delete</button>
             </div>
         );
